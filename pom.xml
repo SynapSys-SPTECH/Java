@@ -14,8 +14,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
 
+    <dependencies>
         <!--JBDC Dependenciass-->
         <dependency>
             <groupId>org.springframework</groupId>

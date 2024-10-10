@@ -1,4 +1,4 @@
-package school.sptech;
+package sptech.school;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public class Main {
+public class MainLeitura {
 
     public static void main(String[] args) throws IOException {
         String nomeArquivo = "melhores-livros.xlsx";

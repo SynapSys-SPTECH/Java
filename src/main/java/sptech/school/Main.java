@@ -1,7 +1,5 @@
-
 package sptech.school;
 
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
@@ -12,17 +10,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
-        // Instanciando o cliente S3 via S3Provider
-        S3Client s3Client = new S3Provider().getS3Client();
-        String bucketName = "s3-raw-lab-bryan";
 
-        // *************************************
-        // *   Criando um novo bucket no S3    *
-        // *************************************
+        S3Client s3Client = new S3Provider().getS3Client();
+        String bucketName = "bucket-synapsys";
+
+
+//        Criar Bucket
         try {
             CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
                     .bucket(bucketName)
@@ -32,10 +28,7 @@ public class Main {
         } catch (S3Exception e) {
             System.err.println("Erro ao criar o bucket: " + e.getMessage());
         }
-
-        // *************************************
-        // *   Listando todos os buckets       *
-        // *************************************
+//          Listar Todos os Buckets dessa conta:
         try {
             List<Bucket> buckets = s3Client.listBuckets().buckets();
             System.out.println("Lista de buckets:");
@@ -45,13 +38,10 @@ public class Main {
         } catch (S3Exception e) {
             System.err.println("Erro ao listar buckets: " + e.getMessage());
         }
-
-        // *************************************
-        // *   Listando objetos do bucket      *
-        // *************************************
+////        Listar objetos dentro do Bucket Criado/Escolhido
         try {
             ListObjectsRequest listObjects = ListObjectsRequest.builder()
-                    .bucket("s3-raw-lab-bryan")
+                    .bucket(bucketName)
                     .build();
 
             List<S3Object> objects = s3Client.listObjects(listObjects).contents();
@@ -62,21 +52,13 @@ public class Main {
         } catch (S3Exception e) {
             System.err.println("Erro ao listar objetos no bucket: " + e.getMessage());
         }
-
-
-//        // *************************************
-          // *   Fazendo download de arquivos    *
-          // * de todos os arquivos em uma pasta *
-          // *         chamada logs/             *
-          // *************************************
-//
-//
+//         Baixar os arquivos de Base
         try {
             String folderPrefix = "logs/";
 
             List<S3Object> objects = s3Client.listObjects(ListObjectsRequest.builder()
                     .bucket(bucketName)
-                    .prefix(folderPrefix)
+//                    .prefix(folderPrefix)
                     .build()).contents();
             System.out.println(objects);
             for (S3Object object : objects) {
@@ -89,55 +71,59 @@ public class Main {
 
                 InputStream inputStream = s3Client.getObject(getObjectRequest, ResponseTransformer.toInputStream());
                 //para baixar de fora de pastas.
-                //Files.copy(inputStream, new File(object.key()).toPath());
+                Files.copy(inputStream, new File(object.key()).toPath());
                 //para entrar no repositorio e baixar os arquivos
-                Files.copy(inputStream, new File(localFileName).toPath());
+//                Files.copy(inputStream, new File(localFileName).toPath());
                 System.out.println("Arquivo baixado: " + object.key());
             }
         } catch (IOException | S3Exception e) {
             System.err.println("Erro ao fazer download dos arquivos: " + e.getMessage());
         }
 
-        // *************************************
-        // *   Deletando um objeto do bucket   *
-        // *  Está funcionando e verificando   *
-        // *       se existe no Bucket         *
-        // *************************************
-        boolean verified = true;
-        try {
-            String objectKeyToDelete = "arquivo1.txt";
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(objectKeyToDelete)
-                    .build();
+//        Aqui iremos ler o arquivo com Apache POI
 
-            System.out.println(deleteObjectRequest);
-            try {
-                ListObjectsRequest listObjects = ListObjectsRequest.builder()
-                        .bucket(bucketName)
-                        .build();
-                List<S3Object> objects = s3Client.listObjects(listObjects).contents();
-                // Verificar arquivo Existente
-                for (S3Object object : objects) {
-                    if (object.key().equals(objectKeyToDelete)) {
-                        s3Client.deleteObject(deleteObjectRequest);
-                        System.out.println("Objeto encontrado!!");
-                        verified = true;
-                        System.out.println("Objeto deletado com sucesso: " + objectKeyToDelete);
-                        return;
-                    }else {
-                        verified = false;
-                    }
-                }
-                if (!verified){
-                    System.out.println("Não encontrado Objeto!!");
-                }
-            }
-            catch (S3Exception e) {
-                System.err.println("Erro ao listar objetos no bucket: " + e.getMessage());
-            }
-        } catch (S3Exception e) {
-            System.err.println("Erro ao deletar objeto: " + e.getMessage());
-        }
+
+
+        //        // *************************************
+//        // *   Deletando um objeto do bucket   *
+//        // *  Está funcionando e verificando   *
+//        // *       se existe no Bucket         *
+//        // *************************************
+//        boolean verified = true;
+//        try {
+//            String objectKeyToDelete = "arquivo1.txt";
+//            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+//                    .bucket(bucketName)
+//                    .key(objectKeyToDelete)
+//                    .build();
+//
+//            System.out.println(deleteObjectRequest);
+//            try {
+//                ListObjectsRequest listObjects = ListObjectsRequest.builder()
+//                        .bucket(bucketName)
+//                        .build();
+//                List<S3Object> objects = s3Client.listObjects(listObjects).contents();
+//                // Verificar arquivo Existente
+//                for (S3Object object : objects) {
+//                    if (object.key().equals(objectKeyToDelete)) {
+//                        s3Client.deleteObject(deleteObjectRequest);
+//                        System.out.println("Objeto encontrado!!");
+//                        verified = true;
+//                        System.out.println("Objeto deletado com sucesso: " + objectKeyToDelete);
+//                        return;
+//                    }else {
+//                        verified = false;
+//                    }
+//                }
+//                if (!verified){
+//                    System.out.println("Não encontrado Objeto!!");
+//                }
+//            }
+//            catch (S3Exception e) {
+//                System.err.println("Erro ao listar objetos no bucket: " + e.getMessage());
+//            }
+//        } catch (S3Exception e) {
+//            System.err.println("Erro ao deletar objeto: " + e.getMessage());
+//        }
     }
 }

@@ -1,13 +1,12 @@
-package school.sptech;
+package sptech.school;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Main {
+public class MainDB {
 
     public static void main(String[] args) {
 
@@ -40,12 +39,12 @@ public class Main {
 
         // Listando todos os filmes
 
-        List<Filme> filmesDoBanco = connection.query("SELECT * FROM filme", new BeanPropertyRowMapper<>(Filme.class));
+        List<Leitura> LeiturasDoBanco = connection.query("SELECT * FROM leitura", new BeanPropertyRowMapper<>(Leitura.class));
 
         System.out.println("Filmes no banco de dados:");
 
-        for (Filme filme : filmesDoBanco) {
-            System.out.println(filme);
+        for (Leitura leitura : LeiturasDoBanco) {
+            System.out.println(leitura);
         }
 
         // Inserindo um novo filme a partir de um objeto
@@ -55,61 +54,45 @@ public class Main {
         Leitura novaLeitura = new Leitura(1,10,23,90,2.5 , 2.5 , "cidade" , "estado" , dataHorario);
 
 
-        connection.update("INSERT INTO leitura (idLeitura , dia , hora , direcaoVento, rajadaMax , velocidadeHoraria , cidade, estado , creatAt)")
+        connection.update("INSERT INTO leitura (idLeitura , dia , hora , direcaoVento, rajadaMax , velocidadeHoraria , cidade, estado , creatAt)");
 
 
-        Filme novoFilme = new Filme(null, "Vingadores: Ultimato", 2019, "Ação", "Anthony Russo, Joe Russo");
+//        Filme novoFilme = new Filme(null, "Vingadores: Ultimato", 2019, "Ação", "Anthony Russo, Joe Russo");
 
-        connection.update("INSERT INTO filme (nome, ano, genero, diretor) VALUES (?, ?, ?, ?)",
-                novoFilme.getNome(), novoFilme.getAno(), novoFilme.getGenero(), novoFilme.getDiretor());
+//        connection.update("INSERT INTO filme (nome, ano, genero, diretor) VALUES (?, ?, ?, ?)",
+//                novoFilme.getNome(), novoFilme.getAno(), novoFilme.getGenero(), novoFilme.getDiretor());
 
-        System.out.println("\nFilmes no banco de dados após inserção de novo filme:");
+        System.out.println("\nLeituras no banco de dados após inserção de novo leitura:");
 
-        filmesDoBanco = connection.query("SELECT * FROM filme", new BeanPropertyRowMapper<>(Filme.class));
 
-        for (Filme filme : filmesDoBanco) {
-            System.out.println(filme);
+        System.out.println("Filmes no banco de dados:");
+        for (Leitura leitura : LeiturasDoBanco) {
+            System.out.println(leitura);
         }
 
         // Atualizando um filme
+// EXEMPLO DE UPDATE
+//        connection.update("UPDATE filme SET nome = ?, ano = ?, genero = ?, diretor = ? WHERE id = ?",
+//                "Shrek", 2001, "Animação", "Andrew Adamson, Vicky Jenson", 5);
 
-        connection.update("UPDATE filme SET nome = ?, ano = ?, genero = ?, diretor = ? WHERE id = ?",
-                "Shrek", 2001, "Animação", "Andrew Adamson, Vicky Jenson", 5);
-
-        System.out.println("\nFilmes no banco de dados após atualização de filme:");
-
-        filmesDoBanco = connection.query("SELECT * FROM filme", new BeanPropertyRowMapper<>(Filme.class));
-
-        for (Filme filme : filmesDoBanco) {
-            System.out.println(filme);
-        }
 
         // Deletando um filme
-
-        connection.update("DELETE FROM filme WHERE id = ?", 5);
-
-        System.out.println("\nFilmes no banco de dados após exclusão de filme:");
-
-        filmesDoBanco = connection.query("SELECT * FROM filme", new BeanPropertyRowMapper<>(Filme.class));
-
-        for (Filme filme : filmesDoBanco) {
-            System.out.println(filme);
-        }
+// EXEMPLO DE DELETE
+//        connection.update("DELETE FROM filme WHERE id = ?", 5);
 
         // Busca personalizada
+//  EXEMPLO DE QUERY COM WHERE
+        LeiturasDoBanco = connection.query("SELECT * FROM leitura WHERE cidade = ?", new BeanPropertyRowMapper<>(Leitura.class), "cidade");
 
-        System.out.println("\nFilmes de drama no banco de dados:");
-
-        filmesDoBanco = connection.query("SELECT * FROM filme WHERE genero = ?", new BeanPropertyRowMapper<>(Filme.class), "Drama");
-
-        for (Filme filme : filmesDoBanco) {
-            System.out.println(filme);
+        for (Leitura leitura : LeiturasDoBanco) {
+            System.out.println(leitura);
         }
+        System.out.println("Leituras encontradas");
 
         // Buscar um filme pelo ID
-
-        Filme filmeEncontrado = connection.queryForObject("SELECT * FROM filme WHERE id = ?", new BeanPropertyRowMapper<>(Filme.class), 1);
-        System.out.println("\nFilme com ID 1: " + filmeEncontrado);
+// EXEMPLO DE QUERY BUSCANDO PELO ID
+        Leitura leituraEncontrada = connection.queryForObject("SELECT * FROM filme WHERE id = ?", new BeanPropertyRowMapper<>(Leitura.class), 1);
+        System.out.println("\nleitura com ID 1: " + leituraEncontrada);
 
         // Obs: se sua query retornar nenhum ou mais de um item, ao executar, uma exceção será lançada.
     }

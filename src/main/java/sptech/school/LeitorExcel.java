@@ -1,4 +1,4 @@
-package school.sptech;
+package sptech.school;
 
 import java.io.IOException;
 import java.io.InputStream;

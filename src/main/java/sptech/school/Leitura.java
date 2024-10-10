@@ -1,4 +1,4 @@
-package school.sptech;
+package sptech.school;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,11 +33,11 @@ public class Leitura {
     }
 
     public Integer getId() {
-        return id;
+        return idLeitura;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.idLeitura = id;
     }
 
     public Integer getData() {
@@ -107,7 +107,7 @@ public class Leitura {
     @Override
     public String toString() {
         return "Leitura{" +
-                "id=" + id +
+                "id=" + idLeitura +
                 ", data=" + data +
                 ", hora=" + hora +
                 ", direcaoVento=" + direcaoVento +
