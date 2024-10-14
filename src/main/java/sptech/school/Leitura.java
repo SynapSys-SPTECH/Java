@@ -16,9 +16,9 @@ public class Leitura {
     private String estado;
     private LocalDateTime creatAt;
 
-//    public Leitura(){
-//
-//    }
+    public Leitura(){
+
+    }
 
     public Leitura(Integer idLeitura , Integer data, Integer hora, Integer direcaoVento, Double rajadaMax, Double velocidadeHoraria, String cidade, String estado, LocalDateTime creatAt) {
         this.idLeitura = idLeitura;

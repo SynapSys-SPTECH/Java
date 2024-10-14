@@ -1,0 +1,76 @@
+package sptech.school;
+
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
+
+public class BaseClima {
+
+    private LocalDate data;
+    private String hora;
+    private Integer direcaoVento;
+    private Double ventoRajada;
+    private Double ventoVelocidade;
+
+    public BaseClima() {
+    }
+
+    public BaseClima(LocalDate data, String hora, Integer direcaoVento, Double ventoRajada, Double ventoVelocidade) {
+        this.data = data;
+        this.hora = hora;
+        this.direcaoVento = direcaoVento;
+        this.ventoRajada = ventoRajada;
+        this.ventoVelocidade = ventoVelocidade;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
+    }
+
+    public Integer getDirecaoVento() {
+        return direcaoVento;
+    }
+
+    public void setDirecaoVento(Integer direcaoVento) {
+        this.direcaoVento = direcaoVento;
+    }
+
+    public Double getVentoRajada() {
+        return ventoRajada;
+    }
+
+    public void setVentoRajada(Double ventoRajada) {
+        this.ventoRajada = ventoRajada;
+    }
+
+    public Double getVentoVelocidade() {
+        return ventoVelocidade;
+    }
+
+    public void setVentoVelocidade(Double ventoVelocidade) {
+        this.ventoVelocidade = ventoVelocidade;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseClima{" +
+                "direcaoVento='" + direcaoVento + '\'' +
+                ", ventoRajada='" + ventoRajada + '\'' +
+                ", ventoVelocidade='" + ventoVelocidade + '\'' +
+                ", hora='" + hora + '\'' +
+                ", data='" + data + '\'' +
+                '}';
+    }
+}

@@ -9,7 +9,7 @@ import java.util.List;
 public class MainLeitura {
 
     public static void main(String[] args) throws IOException {
-        String nomeArquivo = "melhores-livros.xlsx";
+        String nomeArquivo = "INMET_NE_BA_A401_SALVADOR_01-01-2024_A_31-07-2024.xlsx";
 
         // Carregando o arquivo excel
         Path caminho = Path.of(nomeArquivo);
@@ -17,14 +17,14 @@ public class MainLeitura {
 
         // Extraindo os livros do arquivo
         LeitorExcel leitorExcel = new LeitorExcel();
-        List<Livro> livrosExtraidos = leitorExcel.extrarLivros(nomeArquivo, arquivo);
+        List<BaseClima> climasExtraidos = leitorExcel.extrarClima(nomeArquivo, arquivo);
 
         // Fechando o arquivo após a extração
         arquivo.close();
 
-        System.out.println("Livros extraídos:");
-        for (Livro livro : livrosExtraidos) {
-            System.out.println(livro);
+        System.out.println("Leituras extraídos:");
+        for (BaseClima clima : climasExtraidos) {
+//            System.out.println(clima);
         }
     }
 }
