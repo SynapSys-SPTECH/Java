@@ -91,6 +91,7 @@ public class Main {
 
         // Diretório onde os arquivos estão localizados
         String diretorio = "./arquivos-Excel";
+        List<List<BaseClima>> climasExtraidos = new ArrayList<>();
 
         try {
             // Obtendo o caminho do diretório
@@ -99,8 +100,9 @@ public class Main {
             // Utilizando DirectoryStream para buscar arquivos que começam com "INMET_NE" e terminam com ".xlsx"
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(pasta, "INMET_NE*.xlsx")) {
 
-                List<List<BaseClima>> cidadesExtraidas = new ArrayList<>();
-                List<List<BaseClima>> climasExtraidos = new ArrayList<>();
+
+
+
                 for (Path caminhoArquivo : stream) {
                     System.out.println("Processando arquivo: " + caminhoArquivo.getFileName());
 
@@ -117,13 +119,29 @@ public class Main {
                     System.out.println(climasExtraidos);
                 }
 
-
-
             }
 
         } catch (IOException e) {
             System.err.println("Erro ao processar os arquivos: " + e.getMessage());
         }
+
+        System.out.println("for Each");
+
+        for (List<BaseClima> dados : climasExtraidos){
+            System.out.println(dados);
+            for (BaseClima baseClima : dados){
+                System.out.println(baseClima.getCidade());
+                System.out.println(baseClima.getHora());
+                System.out.println(baseClima.getEstado());
+                System.out.println(baseClima.getDirecaoVento());
+                System.out.println(baseClima.getVentoRajada());
+                System.out.println(baseClima.getVentoVelocidade());
+            }
+
+
+        }
+
+        System.out.println("Finalizei o FOr Each");
 
 //        Aqui iremos ler o arquivo com Apache POI
 //           *************************************
