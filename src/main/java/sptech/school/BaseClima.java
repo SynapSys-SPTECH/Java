@@ -11,16 +11,36 @@ public class BaseClima {
     private Integer direcaoVento;
     private Double ventoRajada;
     private Double ventoVelocidade;
+    private String cidade;
+    private String estado;
 
     public BaseClima() {
     }
 
-    public BaseClima(LocalDate data, String hora, Integer direcaoVento, Double ventoRajada, Double ventoVelocidade) {
+    public BaseClima(String cidade , String estado, LocalDate data, String hora, Integer direcaoVento, Double ventoRajada, Double ventoVelocidade) {
         this.data = data;
         this.hora = hora;
         this.direcaoVento = direcaoVento;
         this.ventoRajada = ventoRajada;
         this.ventoVelocidade = ventoVelocidade;
+        this.cidade = cidade;
+        this.estado = estado;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public LocalDate getData() {
@@ -65,12 +85,15 @@ public class BaseClima {
 
     @Override
     public String toString() {
-        return "BaseClima{" +
+        return "\n\n" +
+                "BaseClima{" +
                 "direcaoVento='" + direcaoVento + '\'' +
                 ", ventoRajada='" + ventoRajada + '\'' +
                 ", ventoVelocidade='" + ventoVelocidade + '\'' +
                 ", hora='" + hora + '\'' +
                 ", data='" + data + '\'' +
+                " cidade='" + cidade + '\'' +
+                ", estado='" + estado + '\'' +
                 '}';
     }
 }
