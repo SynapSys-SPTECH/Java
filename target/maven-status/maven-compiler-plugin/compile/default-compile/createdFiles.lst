@@ -1,0 +1,5 @@
+DBConnectionProvider.class
+Main.class
+LeitorExcel.class
+BaseClima.class
+client\S3Provider.class
