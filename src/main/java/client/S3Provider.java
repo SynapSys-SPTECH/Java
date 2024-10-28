@@ -7,6 +7,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class S3Provider {
 
     public S3Client getS3Client() {
+        System.out.println("ESTOU NO S3 PROVIDER");
         return S3Client.builder()
                 .region(Region.US_EAST_1)
                 .credentialsProvider(DefaultCredentialsProvider.create())
