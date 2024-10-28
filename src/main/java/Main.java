@@ -19,21 +19,23 @@ public class Main {
 
         Logger log = Logger.getLogger(Main.class.getName());
 
+        System.out.println("Conetando com S3");
         S3Client s3Client = new S3Provider().getS3Client();
         String bucketName = "bucket-synapsys";
 
 //        Criar Bucket Se ele já não Existir
-        try {
-            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-                    .bucket(bucketName)
-                    .build();
-            s3Client.createBucket(createBucketRequest);
-            log.fine("Bucket created: " + bucketName);
-//            System.out.println("Bucket criado com sucesso: " + bucketName);
-        } catch (S3Exception e) {
-            log.warning("Erro ao criar o bucket: " + e.getMessage());
-//            System.err.println("Erro ao criar o bucket: " + e.getMessage());
-        }
+//        try {
+//            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
+//                    .bucket(bucketName)
+//                    .build();
+//            s3Client.createBucket(createBucketRequest);
+//            log.fine("Bucket created: " + bucketName);
+////            System.out.println("Bucket criado com sucesso: " + bucketName);
+//        } catch (S3Exception e) {
+//            log.warning("Erro ao criar o bucket: " + e.getMessage());
+////            System.err.println("Erro ao criar o bucket: " + e.getMessage());
+//        }
+
         try {
             String diretorioArquivos = "arquivos-Excel/";
 
@@ -41,7 +43,7 @@ public class Main {
                     .bucket(bucketName)
                     .prefix(diretorioArquivos)
                     .build()).contents();
-            System.out.println(objects);
+//            System.out.println(objects);
             for (S3Object object : objects) {
                 GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                         .bucket(bucketName)
@@ -57,7 +59,7 @@ public class Main {
             }
         } catch (IOException | S3Exception e) {
             log.warning("Erro ao fazer download dos arquivos: " + e.getMessage());
-//            System.err.println("Erro ao fazer download dos arquivos: " + e.getMessage());
+            System.err.println("Erro ao fazer download dos arquivos: " + e.getMessage());
         }
 
         // *************************************************
@@ -66,6 +68,8 @@ public class Main {
 
         // Diretório onde os arquivos estão localizados
         String diretorio = "./arquivos-Excel";
+        // Quando estiver no Jar comentar linha acima e descomentar abaixo
+//        String diretorio = "../arquivos-Excel";
         List<List<BaseClima>> climasExtraidos = new ArrayList<>();
 
         try {
@@ -175,4 +179,6 @@ public class Main {
 
         
     }
+
+
 }
