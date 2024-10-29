@@ -12,12 +12,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 public class Main {
     public static void main(String[] args) {
 
         Logger log = Logger.getLogger(Main.class.getName());
+
+        // Configurando o logger
+        log.setUseParentHandlers(false); // Remove o console handler padrão
+
+        // Criando e configurando um ConsoleHandler customizado
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setFormatter(new Main.CustomFormatter());
+        log.addHandler(consoleHandler);
 
         System.out.println("Conetando com S3");
         S3Client s3Client = new S3Provider().getS3Client();
@@ -104,18 +112,15 @@ public class Main {
 
         } catch (IOException e) {
             log.warning("Erro ao processar os arquivos: " + e.getMessage());
-//            System.err.println("Erro ao processar os arquivos: " + e.getMessage());
         }
 
         DBConnectionProvider dbConnectionProvider = new DBConnectionProvider();
         JdbcTemplate connection = dbConnectionProvider.getConnection();
         if(!climasExtraidos.isEmpty()) {
             log.info("Iniciando a Inserção de dados");
-//        System.out.println("Iniciando a Inserção de dados");
             int i = 0;
             for (List<BaseClima> dados : climasExtraidos) {
                 log.info("Lendo dados da cidade " + dados.get(i).getCidade());
-//            System.out.println("Lendo dados da cidade " + dados.get(i).getCidade() );
 
                 for (BaseClima baseClima : dados) {
                     String data = baseClima.getData().toString();
@@ -139,50 +144,39 @@ public class Main {
         }else {
             log.warning("Erro ao inserir os dados");
         }
-//        Aqui iremos ler o arquivo com Apache POI
-//           *************************************
-//        // *   Deletando um objeto do bucket   *
-//        // *  Está funcionando e verificando   *
-//        // *       se existe no Bucket         *
-//        // *************************************
-//        boolean verified = true;
-//        try {
-//            String objectKeyToDelete = "arquivo1.txt";
-//            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-//                    .bucket(bucketName)
-//                    .key(objectKeyToDelete)
-//                    .build();
-//
-//            System.out.println(deleteObjectRequest);
-//            try {
-//                ListObjectsRequest listObjects = ListObjectsRequest.builder()
-//                        .bucket(bucketName)
-//                        .build();
-//                List<S3Object> objects = s3Client.listObjects(listObjects).contents();
-//                // Verificar arquivo Existente
-//                for (S3Object object : objects) {
-//                    if (object.key().equals(objectKeyToDelete)) {
-//                        s3Client.deleteObject(deleteObjectRequest);
-//                        System.out.println("Objeto encontrado!!");
-//                        verified = true;
-//                        System.out.println("Objeto deletado com sucesso: " + objectKeyToDelete);
-//                        return;
-//                    }else {
-//                        verified = false;
-//                    }
-//                }
-//                if (!verified){
-//                    System.out.println("Não encontrado Objeto!!");
-//                }
-//            }
-//            catch (S3Exception e) {
-//                System.err.println("Erro ao listar objetos no bucket: " + e.getMessage());
-//            }
-//        } catch (S3Exception e) {
-//            System.err.println("Erro ao deletar objeto: " + e.getMessage());
-//        }
+
 
         
+    }
+
+    static class CustomFormatter extends Formatter {
+        // Códigos ANSI para cores
+        private static final String RESET = "\u001B[0m";
+        private static final String RED = "\u001B[31m";
+        private static final String YELLOW = "\u001B[33m";
+        private static final String GREEN = "\u001B[32m";
+
+        @Override
+        public String format(LogRecord record) {
+            String color;
+
+            // Define a cor com base no nível de log
+            if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+                color = RED; // Para WARNING e SEVERE
+            } else if (record.getLevel().intValue() == Level.INFO.intValue()) {
+                color = GREEN; // Para INFO
+            } else {
+                color = YELLOW; // Para outros níveis
+            }
+
+            return color +
+                    String.format("%1$tF %1$tT %2$s %3$s: %4$s%n",
+                            record.getMillis(),
+                            record.getSourceClassName(),
+                            record.getLevel().getLocalizedName(),
+                            record.getMessage()) +
+                    RESET;
+        }
     }
 
 
