@@ -80,9 +80,7 @@ public class Main {
         // *************************************************
 
         // Diretório onde os arquivos estão localizados
-//        String diretorio = "./arquivos-Excel";
-        // Quando estiver no Jar comentar linha acima e descomentar abaixo
-        String diretorio = "../arquivos-Excel";
+        String diretorio = "./arquivos-Excel";
         List<List<BaseClima>> climasExtraidos = new ArrayList<>();
 
         try {
