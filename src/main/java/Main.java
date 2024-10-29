@@ -24,17 +24,17 @@ public class Main {
         String bucketName = "bucket-synapsys";
 
 //        Criar Bucket Se ele já não Existir
-//        try {
-//            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-//                    .bucket(bucketName)
-//                    .build();
-//            s3Client.createBucket(createBucketRequest);
-//            log.fine("Bucket created: " + bucketName);
-////            System.out.println("Bucket criado com sucesso: " + bucketName);
-//        } catch (S3Exception e) {
-//            log.warning("Erro ao criar o bucket: " + e.getMessage());
-////            System.err.println("Erro ao criar o bucket: " + e.getMessage());
-//        }
+        try {
+            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
+                    .bucket(bucketName)
+                    .build();
+            s3Client.createBucket(createBucketRequest);
+            log.fine("Bucket created: " + bucketName);
+//            System.out.println("Bucket criado com sucesso: " + bucketName);
+        } catch (S3Exception e) {
+            log.warning("Erro ao criar o bucket: " + e.getMessage());
+//            System.err.println("Erro ao criar o bucket: " + e.getMessage());
+        }
 
         try {
             String diretorioArquivos = "arquivos-Excel/";
@@ -43,23 +43,28 @@ public class Main {
                     .bucket(bucketName)
                     .prefix(diretorioArquivos)
                     .build()).contents();
-//            System.out.println(objects);
+            System.out.println("Objetos encontrados: "+ objects);
             for (S3Object object : objects) {
+                System.out.println("Objeto: " + object.key());
                 GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                         .bucket(bucketName)
                         .key(object.key())
                         .build();
                 String localFileName = object.key().substring(diretorioArquivos.length());
+
                 InputStream inputStream = s3Client.getObject(getObjectRequest, ResponseTransformer.toInputStream());
-                Path caminhoDestino =Paths.get(diretorioArquivos + localFileName);
+
+                Path caminhoDestino = Paths.get(diretorioArquivos + localFileName);
+
                 Files.createDirectories(caminhoDestino.getParent());
+
                 Files.copy(inputStream, caminhoDestino);
-//                System.out.println("Arquivo baixado: " + object.key());
+
                 log.fine("Arquivo baixado: " + object.key());
             }
         } catch (IOException | S3Exception e) {
+            e.printStackTrace();
             log.warning("Erro ao fazer download dos arquivos: " + e.getMessage());
-            System.err.println("Erro ao fazer download dos arquivos: " + e.getMessage());
         }
 
         // *************************************************
@@ -67,9 +72,9 @@ public class Main {
         // *************************************************
 
         // Diretório onde os arquivos estão localizados
-        String diretorio = "./arquivos-Excel";
+//        String diretorio = "./arquivos-Excel";
         // Quando estiver no Jar comentar linha acima e descomentar abaixo
-//        String diretorio = "../arquivos-Excel";
+        String diretorio = "../arquivos-Excel";
         List<List<BaseClima>> climasExtraidos = new ArrayList<>();
 
         try {
