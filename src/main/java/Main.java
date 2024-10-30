@@ -130,7 +130,7 @@ public class Main {
                     Double velocidadeMax = baseClima.getVentoVelocidade();
 
                     connection.update(
-                            "INSERT INTO Leitura (dia, hora, direcaoVento, rajadaMax, velocidadeHoraria, cidade, estado) VALUES (? , ?, ?, ?, ?, ?, ?)",
+                            "INSERT INTO leitura (dia, hora, direcaoVento, rajadaMax, velocidadeHoraria, cidade, estado) VALUES (? , ?, ?, ?, ?, ?, ?)",
                             data, hora, direcaoVento, rajadaMax, velocidadeMax, cidade, estado);
                 }
                 log.info("inserido dados da cidade " + dados.get(i).getCidade());
