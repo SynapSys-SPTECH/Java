@@ -1,15 +1,3 @@
-import org.springframework.jdbc.core.JdbcTemplate;
-import software.amazon.awssdk.core.sync.ResponseTransformer;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
-import client.S3Provider;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
@@ -32,15 +20,16 @@ public class Main {
         Bucket function = new Bucket();
 
         function.criarBucket(bucketName);
-
+//
         function.baixarArquivos(bucketName);
 
         String diretorio = "./arquivos-Excel";
+
         List<List<BaseClima>> climasExtraidos = new ArrayList<>();
 
-        ApachePoi teste = new ApachePoi();
+        ApachePoi lerArq = new ApachePoi();
 
-        teste.listar(diretorio,climasExtraidos);
+        lerArq.listar(diretorio,climasExtraidos);
 
         BDJava banco = new BDJava();
 

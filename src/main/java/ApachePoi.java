@@ -16,7 +16,7 @@ public class ApachePoi {
         try {
             Path pasta = Paths.get(diretorio);
 
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(pasta, "INMET_NE*.xlsx")) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(pasta, "INMET_NE_BA*.xlsx")) {
                 for (Path caminhoArquivo : stream) {
                     log.info("Processando arquivo: " + caminhoArquivo.getFileName());
 
