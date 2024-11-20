@@ -3,11 +3,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class BDJava {
+public class BDJava extends DBConnectionProvider {
 
-    DBConnectionProvider dbConnectionProvider = new DBConnectionProvider();
-    JdbcTemplate connection = dbConnectionProvider.getConnection();
+
     Logger log = Logger.getLogger(Main.class.getName());
+
 
     public void inserirBanco(List<List<BaseClima>> climasExtraidos){
         log.info("Iniciando a Inserção de dados");
@@ -28,7 +28,7 @@ public class BDJava {
                 Double longitude = baseClima.getLongitude();
 
 
-                connection.update(
+                getConnection().update(
                         "INSERT INTO leitura (dataHora, latitude, longitude, direcaoVento, rajadaMax, velocidadeHoraria, municipio, estado) VALUES (?, ?,? , ?, ?, ?, ?, ?)",
                         data +" "+ hora, latitude, longitude, direcaoVento, rajadaMax, velocidadeMax, cidade, estado);
             }

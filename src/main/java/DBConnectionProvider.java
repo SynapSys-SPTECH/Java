@@ -9,10 +9,9 @@ public class DBConnectionProvider {
 
     public DBConnectionProvider() {
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl("jdbc:mysql://localhost:3306/Synapsys");
+        basicDataSource.setUrl("jdbc:mysql://mysql-synapsys:3306/Synapsys");
         basicDataSource.setUsername("root");
         basicDataSource.setPassword("urubu100");
-
         this.dataSource = basicDataSource;
     }
 
