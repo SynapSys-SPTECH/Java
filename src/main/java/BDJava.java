@@ -13,6 +13,10 @@ public class BDJava extends DBConnectionProvider {
     public void inserirBanco(List<List<BaseClima>> climasExtraidos){
         log.info("Iniciando a Inserção de dados");
         int i = 0;
+        System.out.println("======================\n" +
+                "Exibindo getConnection do banco");
+        System.out.println(getConnection() +
+                "\n ======================");
         for (List<BaseClima> dados : climasExtraidos) {
             if (!dados.isEmpty()) {
                 log.info("inserido dados do Municipio " + dados.get(i).getMunicipio());
@@ -28,8 +32,7 @@ public class BDJava extends DBConnectionProvider {
                 Double latitude = baseClima.getLatitude();
                 Double longitude = baseClima.getLongitude();
 
-
-                connection.update(
+                getConnection().update(
                         "INSERT INTO leitura (dataHora, latitude, longitude, direcaoVento, rajadaMax, velocidadeHoraria, municipio, estado) VALUES (?, ?,? , ?, ?, ?, ?, ?)",
                         data +" "+ hora, latitude, longitude, direcaoVento, rajadaMax, velocidadeMax, cidade, estado);
             }
