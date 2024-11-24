@@ -3,3 +3,6 @@ Main.class
 LeitorExcel.class
 BaseClima.class
 client\S3Provider.class
+br\com\bandtec\modelo\java\App.class
+br\com\bandtec\modelo\java\Slack.class
+
