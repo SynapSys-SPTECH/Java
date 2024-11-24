@@ -8,7 +8,7 @@ public class BDJava extends DBConnectionProvider {
 
     Logger log = Logger.getLogger(Main.class.getName());
     DBConnectionProvider dbConnectionProvider = new DBConnectionProvider();
-    JdbcTemplate connection = getConnection();
+    JdbcTemplate connection = dbConnectionProvider.getConnection();
 
     public void inserirBanco(List<List<BaseClima>> climasExtraidos){
         log.info("Iniciando a Inserção de dados");
