@@ -8,14 +8,14 @@ public class BDJava extends DBConnectionProvider {
 
     Logger log = Logger.getLogger(Main.class.getName());
     DBConnectionProvider dbConnectionProvider = new DBConnectionProvider();
-    JdbcTemplate connection = dbConnectionProvider.getConnection();
+    JdbcTemplate connection = getConnection();
 
     public void inserirBanco(List<List<BaseClima>> climasExtraidos){
         log.info("Iniciando a Inserção de dados");
         int i = 0;
-        System.out.println("======================\n" +
+        log.info("======================\n" +
                 "Exibindo getConnection do banco");
-        System.out.println(getConnection() +
+        log.info(getConnection() +
                 "\n ======================");
         for (List<BaseClima> dados : climasExtraidos) {
             if (!dados.isEmpty()) {
@@ -32,7 +32,7 @@ public class BDJava extends DBConnectionProvider {
                 Double latitude = baseClima.getLatitude();
                 Double longitude = baseClima.getLongitude();
 
-                getConnection().update(
+                connection.update(
                         "INSERT INTO leitura (dataHora, latitude, longitude, direcaoVento, rajadaMax, velocidadeHoraria, municipio, estado) VALUES (?, ?,? , ?, ?, ?, ?, ?)",
                         data +" "+ hora, latitude, longitude, direcaoVento, rajadaMax, velocidadeMax, cidade, estado);
             }
