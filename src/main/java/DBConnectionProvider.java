@@ -37,7 +37,7 @@ public class DBConnectionProvider {
         // Obter configurações do banco de dados a partir das variáveis de ambiente
         String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:mysql://172.18.0.2:3306/Synapsys");
         String dbUsername = System.getenv().getOrDefault("DB_USERNAME", "root");
-        String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "09241724");
+        String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "urubu100");
 
         // Validar URL do banco de dados
         if (dbUrl.isEmpty()) {
