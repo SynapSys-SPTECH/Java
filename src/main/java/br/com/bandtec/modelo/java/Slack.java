@@ -1,57 +1,89 @@
 package br.com.bandtec.modelo.java;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import org.json.JSONObject;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
-/**
- *
- * @author Diego Brito <diego.lima@bandtec.com.br>
- */
+import org.json.JSONObject;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 public class Slack {
 
-    private String url = "https://hooks.slack.com/triggers/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";
+    private static final HttpClient client = HttpClient.newHttpClient();
+    private static final String URL = System.getenv("https://hooks.slack.com/services/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");
 
+    // Conexão com o Slack
+    public static void conexao(JSONObject content) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(
+                        URI.create(URL))
+                .header("accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(content.toString()))
+                .build();
 
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-    public void sendMessage(JSONObject message) throws Exception {
+        System.out.println(String.format("Status: %s", response.statusCode()));
+        System.out.println(String.format("Response: %s", response.body()));
+    }
 
-        URL obj = new URL(this.url);
+    private void inserirNotificacaoBanco(JdbcTemplate connection, String titulo, String descricao) {
+        try {
+            DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String dataHora = LocalDateTime.now().format(formatoData);
 
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            String query = "INSERT INTO notificacao (titulo, descricao) VALUES (?, ?)";
+            int fkEmpresa = 1;
 
-        con.setRequestMethod("POST");
-        con.setDoOutput(true);
+            connection.update(query, titulo, descricao, dataHora, fkEmpresa);
+            System.out.println("Notificação inserida no banco de dados com sucesso!");
 
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(message.toString());
-
-        wr.flush();
-        wr.close();
-
-        int responseCode = con.getResponseCode();
-
-        System.out.println("Sending 'POST' request to URL: " + this.url);
-        System.out.println("POST parameters: " + message.toString());
-        System.out.println("Response Code: " + responseCode);
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-        String inputLine;
-
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = reader.readLine()) != null) {
-            response.append(inputLine);
+        } catch (Exception e) {
+            System.out.println("Erro ao inserir notificação no banco de dados: ");
         }
-        
-        reader.close();
-        System.out.println("Success.");
+    }
 
 
 
+    //notificação do total de linhas inseridas
+    public void gerarNotificacaoLinhas(JdbcTemplate connection) {
+        String query = "SELECT COUNT(*) AS total_linhas FROM Synapsys.leitura";
+
+        List<Map<String, Object>> resultados = connection.queryForList(query);
+
+        if (!resultados.isEmpty()) {
+            Long totalLinhas = (Long) resultados.get(0).get("total_linhas");
+            String descricao = "Total de linhas inseridas: " + totalLinhas;
+
+            try {
+                JSONObject json = criarJson("Linhas inseridas", descricao);
+                inserirNotificacaoBanco(connection, "Linhas inseridas", descricao);
+
+                conexao(json);
+            } catch (Exception e) {
+                System.out.println("Erro ao realizar Query");
+            }
+
+        }
+    }
+
+
+    private JSONObject criarJson(String titulo, String descricao) {
+        JSONObject json = new JSONObject();
+
+        json.put("text", "*" + titulo + "*\n" + descricao);
+
+        return json;
+    }
+
+    public void executarNotificacoes() {
+
+        JdbcTemplate connection = new JdbcTemplate();
+        gerarNotificacaoLinhas(connection);
     }
 }
