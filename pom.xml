@@ -67,6 +67,15 @@
             <version>2.22.0</version>
         </dependency>
 
+        <!-- Slack dependencias -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20201115</version>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>
