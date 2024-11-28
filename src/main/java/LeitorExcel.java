@@ -23,21 +23,22 @@ public class LeitorExcel {
         List<BaseClima> listaClima = new ArrayList<>();
             // Utiliza try-with-resources para garantir o fechamento correto do Workbook
             try (Workbook workbook = nomeArquivo.endsWith(".xlsx") ? new XSSFWorkbook(arquivo) : new HSSFWorkbook(arquivo)) {
-                log.info("\nIniciando leitura do arquivo %s\n".formatted(nomeArquivo));
+                log.info("Iniciando leitura do arquivo %s".formatted(nomeArquivo));
 
                 Sheet sheet = workbook.getSheetAt(0);
 
                 int j = 0;
 
-                String Cidade = "";
+                String Municipio = "";
 
                 String Estado = "";
 
-                log.fine("""
-                
-                Iniciando a leitura da primeira parte do arquivo
-                
-                """);
+                Double latitude = 0.0;
+
+                Double longitude = 0.0;
+
+
+                log.info("iniciando a leitura da primeira parte do arquivo");
 
                 // Itera sobre as linhas da planilha
                 int ultimaLinhaTb1 = 0;
@@ -52,7 +53,6 @@ public class LeitorExcel {
                             // Verifica se a célula existe e se não é nula
                             if (row.getCell(1) != null) {
                                 lido.setEstado(row.getCell(1).getStringCellValue());
-                                log.fine("Adicionado Estado Sigla: " + lido.getEstado());
                                 Estado = lido.getEstado();
                             } else {
                                 log.warning("Célula de Estado Sigla vazia na linha 0.");
@@ -62,14 +62,28 @@ public class LeitorExcel {
                         case 2:
                             // Verifica se a célula existe e se não é nula
                             if (row.getCell(1) != null) {
-                                lido.setCidade(row.getCell(1).getStringCellValue());
-                                log.fine("Adicionado Cidade: " + lido.getCidade());
-                                Cidade = lido.getCidade();
+                                lido.setMunicipio(row.getCell(1).getStringCellValue());
+                                Municipio = lido.getMunicipio();
                             } else {
-                                log.warning("Célula de Cidade vazia na linha 2.");
+                                log.warning("Célula de Municipio vazia na linha 2.");
                             }
 
                             break;
+                        case 4:
+                            if (row.getCell(1) != null) {
+                                lido.setLatitude(row.getCell(1).getNumericCellValue());
+                                latitude = lido.getLatitude();
+                            } else {
+                                log.warning("Célula de Latitude vazia na linha 2.");
+                            }break;
+                        case 5:
+                            if (row.getCell(1) != null) {
+                                lido.setLongitude(row.getCell(1).getNumericCellValue());
+                                longitude = lido.getLongitude();
+                            } else {
+                                log.warning("Célula de Longitude vazia na linha 2.");
+                            }break;
+
                         default:
                             break;
                     }
@@ -83,11 +97,7 @@ public class LeitorExcel {
                 
                 log.info("Linhas lidas:" + ultimaLinhaTb1);
 
-                log.info("""
-                
-                Iniciando a leitura da segunda parte do arquivo
-                
-                """);
+                log.info("Iniciando a leitura da segunda parte do arquivo");
 
                 // Iterando sobre as linhas da planilha
                 int cont = 0;
@@ -121,6 +131,7 @@ public class LeitorExcel {
 
                         if (row.getCell(16) != null) {
                             clima.setDirecaoVento((int) row.getCell(16).getNumericCellValue());
+//                            System.out.println(clima.getDirecaoVento());
                         }
 
                         if (row.getCell(17) != null) {
@@ -131,16 +142,22 @@ public class LeitorExcel {
                             clima.setVentoRajada(row.getCell(18).getNumericCellValue());
                         }
 
-                        clima.setCidade(Cidade);
+                        clima.setLatitude(latitude);
+                        clima.setLongitude(longitude);
+                        clima.setMunicipio(Municipio);
                         clima.setEstado(Estado);
-                        listaClima.add(clima);
+
+                        if (clima.getVentoRajada() != null && clima.getVentoVelocidade() != null && clima.getDirecaoVento() != null) {
+                            listaClima.add(clima);
+                        }
+
                     } else {
                         cont++;
                     }
                 }
 
-                log.fine("\nLeitura do arquivo finalizada\n");
-                log.fine("linhas Insiridas:" + ultimaLinhaTb2);
+                log.info("Leitura do arquivo finalizada");
+                log.info("linhas Lidas:" + ultimaLinhaTb2 + "\n");
                 return listaClima;
 
             } catch (IOException e) {

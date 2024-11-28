@@ -4,31 +4,35 @@ public class BaseClima {
 
     private LocalDate data;
     private String hora;
+    private Double latitude;
+    private Double longitude;
     private Integer direcaoVento;
     private Double ventoRajada;
     private Double ventoVelocidade;
-    private String cidade;
     private String estado;
+    private String municipio;
 
     public BaseClima() {
     }
 
-    public BaseClima(String cidade , String estado, LocalDate data, String hora, Integer direcaoVento, Double ventoRajada, Double ventoVelocidade) {
+    public BaseClima(Double latitude, Double longitude,String municipio , String estado, LocalDate data, String hora, Integer direcaoVento, Double ventoRajada, Double ventoVelocidade) {
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.data = data;
         this.hora = hora;
         this.direcaoVento = direcaoVento;
         this.ventoRajada = ventoRajada;
         this.ventoVelocidade = ventoVelocidade;
-        this.cidade = cidade;
+        this.municipio = municipio;
         this.estado = estado;
     }
 
-    public String getCidade() {
-        return cidade;
+    public String getMunicipio() {
+        return municipio;
     }
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
+    public void setMunicipio(String Municipio) {
+        this.municipio = Municipio;
     }
 
     public String getEstado() {
@@ -79,6 +83,23 @@ public class BaseClima {
         this.ventoVelocidade = ventoVelocidade;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+
     @Override
     public String toString() {
         return "\n\n" +
@@ -88,8 +109,10 @@ public class BaseClima {
                 ", ventoVelocidade='" + ventoVelocidade + '\'' +
                 ", hora='" + hora + '\'' +
                 ", data='" + data + '\'' +
-                " cidade='" + cidade + '\'' +
+                " Municipio='" + municipio + '\'' +
                 ", estado='" + estado + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 }

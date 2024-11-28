@@ -36,9 +36,8 @@ public class Bucket {
                     .bucket(bucketName)
                     .prefix(diretorioArquivos)
                     .build()).contents();
-            System.out.println("Objetos encontrados: "+ objects);
+            System.out.println("Quantidade de objetos encontrados: "+ objects.size());
             for (S3Object object : objects) {
-                System.out.println("Objeto: " + object.key());
                 GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                         .bucket(bucketName)
                         .key(object.key())
@@ -53,7 +52,7 @@ public class Bucket {
 
                 Files.copy(inputStream, caminhoDestino);
 
-                log.fine("Arquivo baixado: " + object.key());
+                log.info("Arquivo baixado: " + object.key());
             }
         } catch (IOException | S3Exception e) {
             e.printStackTrace();
