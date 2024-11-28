@@ -157,7 +157,7 @@ public class LeitorExcel {
                 }
 
                 log.info("Leitura do arquivo finalizada");
-                log.info("linhas Insiridas:" + ultimaLinhaTb2 + "\n");
+                log.info("linhas Lidas:" + ultimaLinhaTb2 + "\n");
                 return listaClima;
 
             } catch (IOException e) {

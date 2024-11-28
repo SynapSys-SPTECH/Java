@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class Slack {
 
     private static final HttpClient client = HttpClient.newHttpClient();
-    private static final String URL = System.getenv("https://hooks.slack.com/services/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");
+    private static final String URL = System.getenv("https://hooks.slack.com/services/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");
 
     // Conexão com o Slack
     public static void conexao(JSONObject content) throws IOException, InterruptedException {
@@ -35,10 +35,10 @@ public class Slack {
             DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String dataHora = LocalDateTime.now().format(formatoData);
 
-            String query = "INSERT INTO slack (titulo, descricao) VALUES (?, ?)";
+            String query = "INSERT INTO slack (titulo, descricao , updateAt, idteste) VALUES (?, ?, ?,?)";
             int fkEmpresa = 1;
 
-            connection.update(query, titulo, descricao, dataHora, fkEmpresa);
+            connection.update(query, titulo, descricao, dataHora, fkEmpresa );
             System.out.println("Notificação inserida no banco de dados com sucesso!");
 
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class Slack {
 
                 conexao(json);
             } catch (Exception e) {
-                System.out.println("Erro ao realizar Query");
+                System.out.println("Erro ao realizar Query" + e.getMessage());
             }
 
         }
@@ -80,8 +80,9 @@ public class Slack {
     }
 
     public void executarNotificacoes() {
+        DBConnectionProvider db = new DBConnectionProvider();
+        JdbcTemplate connection = db.getConnection();
 
-        JdbcTemplate connection = new JdbcTemplate();
         gerarNotificacaoLinhas(connection);
     }
 }
