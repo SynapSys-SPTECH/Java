@@ -17,7 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class LeitorExcel {
 
-    public List<BaseClima> extrairClima(String nomeArquivo, InputStream arquivo) {
+    public List<BaseClima> extrairClima(String nomeArquivo, InputStream arquivo) throws Exception {
 
         Logger log = Logger.getLogger(Main.class.getName());
         List<BaseClima> listaClima = new ArrayList<>();
@@ -57,7 +57,6 @@ public class LeitorExcel {
                             } else {
                                 log.warning("Célula de Estado Sigla vazia na linha 0.");
                             }
-
                             break;
                         case 2:
                             // Verifica se a célula existe e se não é nula
@@ -67,7 +66,6 @@ public class LeitorExcel {
                             } else {
                                 log.warning("Célula de Municipio vazia na linha 2.");
                             }
-
                             break;
                         case 4:
                             if (row.getCell(1) != null) {
@@ -94,11 +92,8 @@ public class LeitorExcel {
                     }
                     j++;
                 }
-                
                 log.info("Linhas lidas:" + ultimaLinhaTb1);
-
                 log.info("Iniciando a leitura da segunda parte do arquivo");
-
                 // Iterando sobre as linhas da planilha
                 int cont = 0;
                 int ultimaLinhaTb2 = 0;
@@ -131,7 +126,6 @@ public class LeitorExcel {
 
                         if (row.getCell(16) != null) {
                             clima.setDirecaoVento((int) row.getCell(16).getNumericCellValue());
-//                            System.out.println(clima.getDirecaoVento());
                         }
 
                         if (row.getCell(17) != null) {
@@ -157,12 +151,14 @@ public class LeitorExcel {
                 }
 
                 log.info("Leitura do arquivo finalizada");
-                log.info("linhas Lidas:" + ultimaLinhaTb2 + "\n");
+                log.info("linhas Lidas:" + ultimaLinhaTb2);
+                Slack.notificar("Linhas lidas do arquivo " + nomeArquivo + ", linhas: " + ultimaLinhaTb2);
                 return listaClima;
 
             } catch (IOException e) {
                 // Caso ocorra algum erro durante a leitura do arquivo uma exceção será lançada
-                log.warning("Erro na leitura do arquivo:" + e.getMessage());
+                log.warning("Erro na leitura do arquivo: " + e.getMessage());
+                Slack.notificar("Erro na leitura do arquivo: " + e.getMessage());
                 throw new RuntimeException(e);
             }
 

@@ -10,12 +10,13 @@ public class BDJava extends DBConnectionProvider {
     private static final Logger log = Logger.getLogger(Main.class.getName());
     private final JdbcTemplate connection;
 
-    public BDJava() {
+    public BDJava() throws Exception {
+        super();
         // Usar a conexão herdada
         this.connection = super.getConnection();
     }
 
-    public void inserirBanco(List<List<BaseClima>> climasExtraidos) {
+    public void inserirBanco(List<List<BaseClima>> climasExtraidos) throws Exception {
         log.info("Iniciando a inserção de dados...");
 
         if (climasExtraidos == null || climasExtraidos.isEmpty()) {
@@ -70,13 +71,14 @@ public class BDJava extends DBConnectionProvider {
                 }
                 log.info("Inserção em lote concluída para o município: " + municipio);
                 log.info("Quantidade de campos inseridos foi de: " + totalInsercoes);
+                Slack.notificar("Quantidade de campos inseridos no banco de dados do municipio %s foi de: %d".formatted(municipio, totalInsercoes));
                 if (totalInsercoes == 0) {
                     log.info("Dados já estavam presentes no banco de dados.");
                 }
             }
         } catch (Exception e) {
-            // Logar erros com detalhes
             log.log(Level.SEVERE, "Erro ao inserir dados no banco: " + e.getMessage(), e);
+            Slack.notificar("Erro ao inserir dados no banco: " + e.getMessage());
             throw new RuntimeException("Erro durante a inserção de dados.", e);
         }
 

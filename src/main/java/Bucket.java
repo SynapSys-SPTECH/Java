@@ -16,7 +16,7 @@ public class Bucket {
     Logger log = Logger.getLogger(Main.class.getName());
     S3Client s3Client = new S3Provider().getS3Client();
 
-    public void criarBucket(String bucketName) {
+    public void criarBucket(String bucketName) throws Exception {
         try {
             CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
                     .bucket(bucketName)
@@ -25,10 +25,11 @@ public class Bucket {
             log.fine("Bucket created: " + bucketName);
         } catch (S3Exception e) {
             log.warning("Erro ao criar o bucket: " + e.getMessage());
+            Slack.notificar("Erro ao encontrar o bucket " + bucketName);
         }
     }
 
-    public void baixarArquivos(String bucketName) {
+    public void baixarArquivos(String bucketName) throws Exception{
         try {
             String diretorioArquivos = "arquivos-Excel/";
 
@@ -37,6 +38,7 @@ public class Bucket {
                     .prefix(diretorioArquivos)
                     .build()).contents();
             System.out.println("Quantidade de objetos encontrados: "+ objects.size());
+            Slack.notificar("Quantidade de objetos encontrados: " + objects.size());
             for (S3Object object : objects) {
                 GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                         .bucket(bucketName)
@@ -52,10 +54,12 @@ public class Bucket {
 
                 Files.copy(inputStream, caminhoDestino);
 
+
                 log.info("Arquivo baixado: " + object.key());
             }
         } catch (IOException | S3Exception e) {
             e.printStackTrace();
+            Slack.notificar("Erro ao fazer download dos arquivos: " + e.getMessage());
             log.warning("Erro ao fazer download dos arquivos: " + e.getMessage());
         }
     }

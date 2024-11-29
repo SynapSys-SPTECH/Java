@@ -1,9 +1,12 @@
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 
-public class NotificacaoSlack {
+public class Slack {
     private static final String WEBHOOK_URL;
+
+    static Logger log = Logger.getLogger(Main.class.getName());
 
     static {
         WEBHOOK_URL = System.getenv("SLACK_URL");
@@ -12,21 +15,26 @@ public class NotificacaoSlack {
         }
     }
 
-    public static void EnviarNotificacaoSlack(String message) throws Exception {
+    public static void notificar(String message) throws Exception {
         String payload = "{\"text\":\"" + message + "\"}";
         URL url = new URL(WEBHOOK_URL);
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        httpConn.setDoOutput(true);
-        httpConn.setRequestMethod("POST");
-        httpConn.setRequestProperty("Content-Type", "application/json");
-        httpConn.setRequestProperty("Accept", "application/json");
+        HttpURLConnection conxaoHTTP = (HttpURLConnection) url.openConnection();
+        conxaoHTTP.setDoOutput(true);
+        conxaoHTTP.setRequestMethod("POST");
+        conxaoHTTP.setRequestProperty("Content-Type", "application/json");
+        conxaoHTTP.setRequestProperty("Accept", "application/json");
 
-        try (OutputStream os = httpConn.getOutputStream()) {
+        try (OutputStream os = conxaoHTTP.getOutputStream()) {
             byte[] input = payload.getBytes("utf-8");
             os.write(input, 0, input.length);
         }
 
-        int responseCode = httpConn.getResponseCode();
-        System.out.println("Response Code: " + responseCode);
+        int responseCode = conxaoHTTP.getResponseCode();
+        if (responseCode == 200){
+            log.info("Mensagem enviada para slack, Response Code: " + responseCode);
+        }else {
+            log.warning("Mensagem não enviada para slack, Response Code: " + responseCode);
+        }
+
     }
 }

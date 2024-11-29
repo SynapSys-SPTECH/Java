@@ -10,17 +10,18 @@ public class DBConnectionProvider {
     private static final Logger log = Logger.getLogger(Main.class.getName());
     private final DataSource dataSource;
 
-    public DBConnectionProvider() {
+    public DBConnectionProvider() throws Exception {
         BasicDataSource basicDataSource = new BasicDataSource();
 
         // Obter configurações do banco de dados a partir das variáveis de ambiente
-        String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:mysql://localhost:3306/Synapsys");
+        String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:mysql://mysql-synapsys:3306/Synapsys");
         String dbUsername = System.getenv().getOrDefault("DB_USERNAME", "root");
-        String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "09241724");
+        String dbPassword = System.getenv().getOrDefault("DB_PASSWORD", "urubu100");
 
         // Validar URL do banco de dados
         if (dbUrl.isEmpty()) {
             log.warning("A URL do banco de dados não foi fornecida! Verifique as configurações do ambiente.");
+            Slack.notificar("A URL do banco de dados não foi fornecida! Verifique as configurações do ambiente.");
             throw new IllegalArgumentException("A URL do banco de dados é obrigatória.");
         }
 
@@ -41,8 +42,10 @@ public class DBConnectionProvider {
             log.info("Testando conexão com o banco de dados...");
             basicDataSource.getConnection().close(); // Fecha imediatamente após testar
             log.info("Conexão com o banco de dados testada com sucesso!");
+            Slack.notificar("Conexão com o banco de dados testada com sucesso!");
         } catch (Exception e) {
             log.log(Level.SEVERE, "Falha ao testar a conexão com o banco de dados. Verifique as configurações.", e);
+            Slack.notificar("Falha ao testar a conexão com o banco de dados. Verifique as configurações.");
             throw new RuntimeException("Não foi possível estabelecer uma conexão com o banco de dados.", e);
         }
 

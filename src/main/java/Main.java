@@ -3,8 +3,9 @@ import java.util.List;
 import java.util.logging.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 
+        Slack.notificar("Aplicação Iniciada...");
         Logger log = Logger.getLogger(Main.class.getName());
 
         log.setUseParentHandlers(false);
@@ -36,8 +37,11 @@ public class Main {
         if(!climasExtraidos.isEmpty()) {
             banco.inserirBanco(climasExtraidos);
         }else {
-            log.warning("Erro ao inserir os dados");
+            Slack.notificar("Erro ao inserir os dados, sem dados para inserir");
+            log.warning("Erro ao inserir os dados, sem dados para inserir");
         }
+
+        Slack.notificar("Aplicação finalizada!");
     }
 
     static class CustomFormatter extends Formatter {

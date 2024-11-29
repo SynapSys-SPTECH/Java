@@ -11,7 +11,7 @@ public class ApachePoi {
 
     Logger log = Logger.getLogger(Main.class.getName());
 
-    public void listar(String diretorio, List<List<BaseClima>> climasExtraidos) {
+    public void listar(String diretorio, List<List<BaseClima>> climasExtraidos) throws Exception {
 
         try {
             Path pasta = Paths.get(diretorio);
@@ -25,11 +25,11 @@ public class ApachePoi {
                     LeitorExcel leitorExcel = new LeitorExcel();
                     climasExtraidos.add(leitorExcel.extrairClima(caminhoArquivo.getFileName().toString(), arquivo));
 
-                    log.info("Dados extraídos do arquivo: " + caminhoArquivo.getFileName());
+                    log.info("Dados extraídos do arquivo: " + caminhoArquivo.getFileName() + "\n");
                 }
             }
-        } catch (
-                IOException e) {
+        } catch (IOException e) {
+            Slack.notificar("Erro ao processar os arquivos: " + e.getMessage());
             log.warning("Erro ao processar os arquivos: " + e.getMessage());
         }
     }
